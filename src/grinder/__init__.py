@@ -9,10 +9,23 @@ Currently supported commands are:
 
 Usage:
   grinder (salt_states|salt_version)
+  grinder --daemon
 """
+import json
 import inspect
 import salt
 from docopt import docopt
+import pika
+import logging
+
+LOGO = """                 _           _
+  __ _ _ __ _ __(_)_ __   __| | ___ _ __ _ __
+ / _` | '__| '__| | '_ \ / _` |/ _ \ '__| '__|
+| (_| | |  | |  | | | | | (_| |  __/ |  | |
+ \__, |_|  |_|  |_|_| |_|\__,_|\___|_|  |_|
+ |___/"""
+
+log = logging.getLogger(__name__)
 
 
 def get_salt_states():
@@ -33,8 +46,12 @@ def main():
             print "%s: %s" % (state, parameters)
     elif arguments["salt_version"]:
         print "salt version is", salt.__version__
+    elif arguments["--daemon"]:
+        daemon()
     else:
         pass
+
+
 class IRPC:
     @staticmethod
     def evens():
